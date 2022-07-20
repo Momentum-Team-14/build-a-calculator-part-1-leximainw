@@ -1,0 +1,41 @@
+body
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #999999;
+    min-height: 100vh;
+    margin: 0;
+}
+
+main
+{
+    background-color: #baffba;
+    width: calc((min(calc(100vw * 5), calc(100vh * 4)) - 10rem) / 5);
+    height: calc((min(calc(100vw * 5), calc(100vh * 4)) - 8rem) / 4);
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: repeat(5, minmax(0, 1fr));
+}
+
+.btn, .display
+{
+    display: flex;
+    align-items: center;
+    background-color: #40ba40;
+    margin: 0.25rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 3em;
+    pointer-events: none;
+}
+
+.btn
+{
+    justify-content: center;
+}
+
+.display
+{
+    justify-content: right;
+    grid-column: span 3;
+}
