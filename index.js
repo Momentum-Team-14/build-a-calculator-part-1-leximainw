@@ -78,7 +78,7 @@ for (let i = 0; i < 10; i++) {
             state.currNum = ''
             state.result = undefined
         }
-        state.currNum += i
+        state.currNum = state.currNum.replace(/^0+/, '') + i
         updateDisplay()
     })
 }
