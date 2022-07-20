@@ -11,6 +11,18 @@ const operators = {
     div: (l, r) => l / r
 }
 
+const opKeyMap = {
+    '+': '#add',
+    '-': '#sub',
+    '*': '#mul',
+    '/': '#div',
+    '=': '#eq',
+    C: '#clear',
+    Enter: '#eq',
+    Escape: '#clear',
+    c: '#clear'
+}
+
 const display = document.querySelector('#display')
 
 function updateDisplay() {
@@ -83,3 +95,26 @@ for (let i = 0; i < 10; i++) {
         updateDisplay()
     })
 }
+
+document.addEventListener('keydown', e => {
+    let target
+    if (e.key === 'Backspace') {
+        if (typeof(state.currNum) === 'number') {
+            target = 'clear'
+        } else if (state.currNum.length != 0) {
+            if (state.currNum.length == 1) {
+                state.currNum = '0'
+            } else {
+                state.currNum = state.currNum.substring(0, state.currNum.length - 1)
+            }
+            updateDisplay()
+        }
+    } else if (opKeyMap.hasOwnProperty(e.key)) {
+        target = opKeyMap[e.key]
+    } else {
+        target = `#num${e.key}`
+    }
+    if (target = document.querySelector(target)) {
+        target.click()
+    }
+})
