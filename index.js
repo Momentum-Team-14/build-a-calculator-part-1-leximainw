@@ -1,6 +1,6 @@
 const state = {
     result: undefined,
-    currOp: 'add',
+    currOp: undefined,
     currNum: ''
 }
 
@@ -27,7 +27,11 @@ function updateResult() {
     } else {
         state.currNum = parseFloat(state.currNum)
     }
-    state.result = operators[state.currOp](state.result, state.currNum)
+    if (operators.hasOwnProperty(state.currOp)) {
+        state.result = operators[state.currOp](state.result, state.currNum)
+    } else {
+        state.result = state.currNum
+    }
 }
 
 function setOperator(op) {
@@ -50,10 +54,7 @@ document.querySelector('#clear').addEventListener('click', e => {
     state.result = 0
     updateDisplay()
     state.result = undefined
-    state.lastAction = {
-        operator: 'add',
-        value: 0
-    }
+    state.currOp = undefined
 })
 
 for (let op of ['add', 'sub', 'mul', 'div']) {
