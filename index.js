@@ -57,7 +57,7 @@ function setOperator(op) {
         state.currOp = op
         updateResult()
     }
-    state.currNum = ''
+    state.currNum = '0'
     updateDisplay()
 }
 
