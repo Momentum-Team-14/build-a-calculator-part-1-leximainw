@@ -4,7 +4,7 @@ const state = {
     result: 0
 }
 
-// map of operators to operator names
+// map of operator names to operators
 const operators = {
     add: (l, r) => l + r,
     sub: (l, r) => l - r,
