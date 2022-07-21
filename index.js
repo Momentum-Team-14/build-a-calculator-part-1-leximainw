@@ -1,7 +1,6 @@
 const state = {
-    result: undefined,
-    currOp: undefined,
-    currNum: ''
+    curr: 'START',
+    result: 0
 }
 
 const operators = {
@@ -17,6 +16,7 @@ const opKeyMap = {
     '*': '#mul',
     '/': '#div',
     '=': '#eq',
+    '.': '#dot',
     C: '#clear',
     Enter: '#eq',
     Escape: '#clear',
@@ -24,76 +24,166 @@ const opKeyMap = {
 }
 
 const display = document.querySelector('#display')
-
 function updateDisplay() {
-    if (typeof(state.currNum) !== 'string' || state.currNum === '') {
-        display.innerText = state.result
-    } else {
-        display.innerText = state.currNum
+    switch (state.curr)
+    {
+        case 'LNUM':
+            display.innerText = state.lnum
+            break
+        case 'RNUM':
+            display.innerText = state.rnum
+            break
+        default:
+            display.innerText = state.result
+            break
     }
 }
 
-function updateResult() {
-    if (state.currNum === '') {
-        state.currNum = state.result
-    } else {
-        state.currNum = parseFloat(state.currNum)
-    }
-    if (operators.hasOwnProperty(state.currOp)) {
-        state.result = operators[state.currOp](state.result, state.currNum)
-    } else {
-        state.result = state.currNum
+function setState(newState, value)
+{
+    state.curr = newState;
+    switch (newState)
+    {
+        case 'START':
+            state.result = 0
+            updateDisplay()
+            break
+        case 'LNUM':
+            state.lnum = value
+            break
+        case 'RNUM':
+            state.rnum = value
+            break
+        case 'OP1':
+        case 'OP2':
+            state.op = value
+            break
+        case 'EQ1':
+            state.result = state.lnum
+            break
+        case 'EQ2':
+            calc()
+            break
     }
 }
 
-function setOperator(op) {
-    if (state.result === undefined)  {
-        state.result = parseFloat(state.currNum)
-        state.currOp = op
-    } else if (state.currNum === '') {
-        updateResult()
-        state.currOp = op
-    } else {
-        state.currOp = op
-        updateResult()
+function onNum(num)
+{
+    switch (state.curr)
+    {
+        case 'START':
+            setState('LNUM', num)
+            break
+        case 'LNUM':
+            if (num != '.' || state.lnum.indexOf(num) == -1) {
+                state.lnum = (state.lnum + num).replace(/^0*(?!\.|$)/, '')
+            }
+            break
+        case 'RNUM':
+            if (num != '.' || state.rnum.indexOf(num) == -1) {
+                state.rnum = (state.rnum + num).replace(/^0*(?!\.|$)/, '')
+            }
+            break
+        case 'OP1':
+            setState('RNUM', num)
+            break
+        case 'OP2':
+            state.lnum = state.result
+            setState('RNUM', num)
+            break
+        case 'EQ1':
+            setState('LNUM', num)
+            break
+        case 'EQ2':
+            setState('LNUM', num)
+            break
     }
-    state.currNum = '0'
     updateDisplay()
 }
 
-document.querySelector('#clear').addEventListener('click', e => {
-    state.currNum = ''
-    state.result = 0
+function onOp(op)
+{
+    switch (state.curr)
+    {
+        case 'START':
+            // do nothing
+            break
+        case 'LNUM':
+            setState('OP1', op)
+            break
+        case 'RNUM':
+            calc()
+            setState('OP2', op)
+            break
+        case 'OP1':
+            setState('OP1', op)
+            break
+        case 'OP2':
+            setState('OP2', op)
+            break
+        case 'EQ1':
+            setState('OP1', op)
+            break
+        case 'EQ2':
+            setState('OP2', op)
+            break
+    }
     updateDisplay()
-    state.result = undefined
-    state.currOp = undefined
-})
+}
 
+function onEq()
+{
+    switch (state.curr)
+    {
+        case 'START':
+            state.lnum = '0'
+            setState('EQ1')
+            break
+        case 'LNUM':
+            setState('EQ1')
+            break
+        case 'RNUM':
+            setState('EQ2')
+            break
+        case 'OP1':
+            state.rnum = state.lnum
+            setState('EQ2')
+            break
+        case 'OP2':
+            state.lnum = state.result
+            setState('EQ2')
+            break
+        case 'EQ1':
+            // no change
+            break
+        case 'EQ2':
+            state.lnum = state.result
+            setState('EQ2')
+            break
+    }
+    updateDisplay()
+}
+
+function calc1()
+{
+    const num = parseFloat(state.lnum)
+    state.result = '' + operators[state.op](num, num)
+}
+
+function calc()
+{
+    state.result = '' + operators[state.op](parseFloat(state.lnum), parseFloat(state.rnum))
+}
+
+document.querySelector('#clear').addEventListener('click', e => setState('START'))
 for (let op of ['add', 'sub', 'mul', 'div']) {
-    document.querySelector(`#${op}`).addEventListener('click', e => setOperator(op))
+    document.querySelector(`#${op}`).addEventListener('click', e => onOp(op))
 }
-
-document.querySelector('#eq').addEventListener('click', e => {
-    updateResult()
-    updateDisplay()
-})
-
-document.querySelector('#dot').addEventListener('click', e => {
-    if (state.currNum.indexOf('.') == -1) {
-        state.currNum += '.'
-        updateDisplay()
-    }
-})
-
+document.querySelector('#eq').addEventListener('click', onEq)
+document.querySelector('#dot').addEventListener('click', e => onNum('.'))
 for (let i = 0; i < 10; i++) {
-    document.querySelector(`#num${i}`).addEventListener('click', e => {
-        if (typeof(state.currNum) === 'number') {
-            state.currNum = ''
-            state.result = undefined
-        }
-        state.currNum = state.currNum.replace(/^0+/, '') + i
-        updateDisplay()
-    })
+    const c = i + ''
+    document.querySelector(`#num${c}`).addEventListener('click', e => onNum(c))
 }
 
 document.addEventListener('keydown', e => {
