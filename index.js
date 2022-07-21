@@ -111,7 +111,7 @@ document.addEventListener('keydown', e => {
         }
     } else if (opKeyMap.hasOwnProperty(e.key)) {
         target = opKeyMap[e.key]
-    } else {
+    } else if (e.key * 1 == e.key) {
         target = `#num${e.key}`
     }
     if (target = document.querySelector(target)) {
