@@ -80,6 +80,8 @@ function onNum(num)
     switch (state.curr)
     {
         case 'START':
+        case 'EQ1':
+        case 'EQ2':
             setState('LNUM', num)
             break
         case 'LNUM':
@@ -94,12 +96,6 @@ function onNum(num)
         case 'OP2':
             state.lnum = state.result
             setState('RNUM', num)
-            break
-        case 'EQ1':
-            setState('LNUM', num)
-            break
-        case 'EQ2':
-            setState('LNUM', num)
             break
     }
     updateDisplay()
@@ -119,21 +115,15 @@ function onOp(op)
             // do nothing
             break
         case 'LNUM':
+        case 'OP1':
+        case 'EQ1':
             setState('OP1', op)
             break
         case 'RNUM':
             calc()
             setState('OP2', op)
             break
-        case 'OP1':
-            setState('OP1', op)
-            break
         case 'OP2':
-            setState('OP2', op)
-            break
-        case 'EQ1':
-            setState('OP1', op)
-            break
         case 'EQ2':
             setState('OP2', op)
             break
@@ -160,15 +150,12 @@ function onEq()
             setState('EQ2')
             break
         case 'OP2':
+        case 'EQ2':
             state.lnum = state.result
             setState('EQ2')
             break
         case 'EQ1':
             // no change
-            break
-        case 'EQ2':
-            state.lnum = state.result
-            setState('EQ2')
             break
     }
     updateDisplay()
