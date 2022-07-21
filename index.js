@@ -56,6 +56,7 @@ function setState(newState, value)
             updateDisplay()
             break
         case 'LNUM':
+            state.result = 0
             state.lnum = value == '.' ? '0.' : value
             break
         case 'RNUM':
