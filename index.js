@@ -1,8 +1,10 @@
+// current state of calculator FSM
 const state = {
     curr: 'START',
     result: 0
 }
 
+// map of operators to operator names
 const operators = {
     add: (l, r) => l + r,
     sub: (l, r) => l - r,
@@ -10,6 +12,7 @@ const operators = {
     div: (l, r) => l / r
 }
 
+// map of keys to associated button elements
 const opKeyMap = {
     '+': '#add',
     '-': '#sub',
@@ -23,8 +26,11 @@ const opKeyMap = {
     c: '#clear'
 }
 
+// display update code
 const display = document.querySelector('#display')
 function updateDisplay() {
+
+    // select display value based on current FSM state
     let value
     switch (state.curr)
     {
@@ -38,6 +44,8 @@ function updateDisplay() {
             value = state.result
             break
     }
+
+    // cast value to string and trim it to try to reduce text overflow
     value += ''
     let exp = value.toLowerCase().indexOf('e')
     let mant = exp == -1 ? value : value.substring(0, exp)
@@ -46,6 +54,7 @@ function updateDisplay() {
     display.innerText = mant + exp
 }
 
+// FSM state update - corresponds to 'ENTER' in calc-fsm.txt
 function setState(newState, value)
 {
     state.curr = newState;
@@ -75,6 +84,7 @@ function setState(newState, value)
     }
 }
 
+// number key action - corresponds to 'num' in calc-fsm.txt
 function onNum(num)
 {
     switch (state.curr)
@@ -101,12 +111,14 @@ function onNum(num)
     updateDisplay()
     function advanceNum(value, num) {
         if (num != '.' || value.indexOf(num) == -1) {
+            // regex to trim leading zeroes, except one before a decimal point
             value = (value + num).replace(/^0*(?!\.|$)/, '')
         }
         return value
     }
 }
 
+// operator key action - corresponds to 'op' in calc-fsm.txt
 function onOp(op)
 {
     switch (state.curr)
@@ -131,6 +143,7 @@ function onOp(op)
     updateDisplay()
 }
 
+// equals key action - corresponds to 'eq' in calc-fsm.txt
 function onEq()
 {
     switch (state.curr)
@@ -161,11 +174,13 @@ function onEq()
     updateDisplay()
 }
 
+// calculate the result of the current operation
 function calc()
 {
     state.result = '' + operators[state.op](parseFloat(state.lnum), parseFloat(state.rnum))
 }
 
+// bind click listeners on all buttons
 document.querySelector('#clear').addEventListener('click', e => setState('START'))
 for (let op of ['add', 'sub', 'mul', 'div']) {
     document.querySelector(`#${op}`).addEventListener('click', e => onOp(op))
@@ -177,6 +192,7 @@ for (let i = 0; i < 10; i++) {
     document.querySelector(`#num${c}`).addEventListener('click', e => onNum(c))
 }
 
+// bind global key-down listener and handle keys of interest
 document.addEventListener('keydown', e => {
     let target
     if (e.key === 'Backspace') {
