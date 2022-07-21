@@ -25,18 +25,25 @@ const opKeyMap = {
 
 const display = document.querySelector('#display')
 function updateDisplay() {
+    let value
     switch (state.curr)
     {
         case 'LNUM':
-            display.innerText = state.lnum
+            value = state.lnum
             break
         case 'RNUM':
-            display.innerText = state.rnum
+            value = state.rnum
             break
         default:
-            display.innerText = state.result
+            value = state.result
             break
     }
+    value += ''
+    let exp = value.toLowerCase().indexOf('e')
+    let mant = exp == -1 ? value : value.substring(0, exp)
+    exp = exp == -1 ? '' : value.substring(exp)
+    mant = mant.substring(0, 15 - exp.length + (mant.startsWith('-') ? 1 : 0)).replace(/\.$/, '')
+    display.innerText = mant + exp
 }
 
 function setState(newState, value)
