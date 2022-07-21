@@ -189,16 +189,27 @@ for (let i = 0; i < 10; i++) {
 document.addEventListener('keydown', e => {
     let target
     if (e.key === 'Backspace') {
-        if (typeof(state.currNum) === 'number') {
-            target = 'clear'
-        } else if (state.currNum.length != 0) {
-            if (state.currNum.length == 1) {
-                state.currNum = '0'
+        function deleteDigit(num) {
+            if (num.length <= 1) {
+                num = '0'
             } else {
-                state.currNum = state.currNum.substring(0, state.currNum.length - 1)
+                num = num.substring(0, num.length - 1)
             }
-            updateDisplay()
+            return num
         }
+        switch (state.curr)
+        {
+            case 'LNUM':
+                state.lnum = deleteDigit(state.lnum)
+                break
+            case 'RNUM':
+                state.rnum = deleteDigit(state.rnum)
+                break
+            default:
+                state.result = deleteDigit(state.result)
+                break
+        }
+        updateDisplay()
     } else if (opKeyMap.hasOwnProperty(e.key)) {
         target = opKeyMap[e.key]
     } else if (e.key * 1 == e.key) {
