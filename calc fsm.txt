@@ -1,0 +1,47 @@
+# finite state machine for the behavior in index.js
+# notation:
+# # is the last numeric key (0-9 or .), if any
+# $ is the last operator key (+, -, *, or /), if any
+# goto STATE; changes the current state and executes the ENTER pseudocode
+
+    START: display result;   # initial state
+ENTER:  result = 0;
+num:    goto LNUM;
+op:     # do nothing
+eq:     lnum = 0; goto EQ1;
+
+    LNUM: display lnum;   # reading first number
+ENTER:  result = 0; lnum = #;
+num:    lnum += #;
+op:     goto OP1;
+eq:     goto EQ1;
+
+    RNUM: display rnum;   # reading subsequent numbers
+ENTER:  rnum = #;
+num:    rnum += #;
+op:     calc(); goto OP2;
+eq:     goto EQ2;
+
+    OP1: display result;   # awaiting more input after first operator
+ENTER:  op = $;
+num:    goto RNUM;
+op:     goto OP1;
+eq:     rnum = lnum; goto EQ2;
+
+    OP2: display result;   # awaiting more input after subsequent operator
+ENTER:  op = $;
+num:    lnum = result; goto RNUM;
+op:     goto OP2;
+eq:     lnum = result; goto EQ2;
+
+    EQ1: display result;   # display result after receiving one number
+ENTER:  result = lnum;
+num:    goto LNUM;
+op:     goto OP1;
+eq:     # no change
+
+    EQ2: display result;   # display result after receiving multiple numbers
+ENTER:  calc();
+num:    goto LNUM;
+op:     goto OP2;
+eq:     lnum = result; goto EQ2;
