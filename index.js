@@ -161,12 +161,6 @@ function onEq()
     updateDisplay()
 }
 
-function calc1()
-{
-    const num = parseFloat(state.lnum)
-    state.result = '' + operators[state.op](num, num)
-}
-
 function calc()
 {
     state.result = '' + operators[state.op](parseFloat(state.lnum), parseFloat(state.rnum))
