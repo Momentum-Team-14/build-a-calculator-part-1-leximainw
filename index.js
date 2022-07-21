@@ -49,10 +49,10 @@ function setState(newState, value)
             updateDisplay()
             break
         case 'LNUM':
-            state.lnum = value
+            state.lnum = value == '.' ? '0.' : value
             break
         case 'RNUM':
-            state.rnum = value
+            state.rnum = value == '.' ? '0.' : value
             break
         case 'OP1':
         case 'OP2':
