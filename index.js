@@ -191,14 +191,6 @@ for (let i = 0; i < 10; i++) {
 document.addEventListener('keydown', e => {
     let target
     if (e.key === 'Backspace') {
-        function deleteDigit(num) {
-            if (num.length <= 1) {
-                num = '0'
-            } else {
-                num = num.substring(0, num.length - 1)
-            }
-            return num
-        }
         switch (state.curr)
         {
             case 'LNUM':
@@ -212,6 +204,14 @@ document.addEventListener('keydown', e => {
                 break
         }
         updateDisplay()
+        function deleteDigit(num) {
+            if (num.length <= 1) {
+                num = '0'
+            } else {
+                num = num.substring(0, num.length - 1)
+            }
+            return num
+        }
     } else if (opKeyMap.hasOwnProperty(e.key)) {
         target = opKeyMap[e.key]
     } else if (e.key * 1 == e.key) {
