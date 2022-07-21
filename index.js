@@ -75,14 +75,10 @@ function onNum(num)
             setState('LNUM', num)
             break
         case 'LNUM':
-            if (num != '.' || state.lnum.indexOf(num) == -1) {
-                state.lnum = (state.lnum + num).replace(/^0*(?!\.|$)/, '')
-            }
+            state.lnum = advanceNum(state.lnum, num)
             break
         case 'RNUM':
-            if (num != '.' || state.rnum.indexOf(num) == -1) {
-                state.rnum = (state.rnum + num).replace(/^0*(?!\.|$)/, '')
-            }
+            state.rnum = advanceNum(state.rnum, num)
             break
         case 'OP1':
             setState('RNUM', num)
@@ -99,6 +95,12 @@ function onNum(num)
             break
     }
     updateDisplay()
+    function advanceNum(value, num) {
+        if (num != '.' || value.indexOf(num) == -1) {
+            value = (value + num).replace(/^0*(?!\.|$)/, '')
+        }
+        return value
+    }
 }
 
 function onOp(op)
