@@ -35,6 +35,11 @@ body
     justify-content: center;
 }
 
+.btn:active
+{
+    background-color: #288828;
+}
+
 #display
 {
     justify-content: right;
