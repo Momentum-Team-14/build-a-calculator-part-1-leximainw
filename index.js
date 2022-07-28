@@ -226,3 +226,11 @@ document.addEventListener('keydown', e => {
         target.click()
     }
 })
+
+// style selector
+const stylePicker = document.querySelector('#style-picker')
+stylePicker.addEventListener('change', e =>
+{
+    console.dir(e)
+    document.querySelector("head #style").href = e.target.value
+})

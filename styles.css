@@ -1,47 +1,22 @@
 body
 {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     background-color: #bababa;
-    min-height: 100vh;
-    margin: 0;
 }
 
 #calc
 {
     background-color: #baffba;
-    width: calc((min(calc(100vw * 5), calc(100vh * 4)) - 10rem) / 5);
-    height: calc((min(calc(100vw * 5), calc(100vh * 4)) - 8rem) / 4);
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    grid-template-rows: repeat(5, minmax(0, 1fr));
     box-shadow: 0 0 1rem #636363;
 }
 
 .btn, #display
 {
-    display: flex;
-    align-items: center;
     background-color: #40ba40;
-    margin: 0.25rem;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 3em;
-    cursor: default;
-}
-
-.btn
-{
-    justify-content: center;
 }
 
 .btn:active
 {
     background-color: #288828;
-}
-
-#display
-{
-    justify-content: right;
-    grid-column: span 3;
 }
